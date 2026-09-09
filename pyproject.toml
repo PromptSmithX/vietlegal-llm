@@ -1,0 +1,55 @@
+[build-system]
+requires = ["hatchling>=1.27,<2"]
+build-backend = "hatchling.build"
+
+[project]
+name = "vietlegal"
+version = "0.1.0"
+description = "Vietnamese legal research assistant foundations"
+readme = "README.md"
+requires-python = ">=3.11,<3.13"
+dependencies = [
+    "pydantic>=2.10,<3",
+    "pydantic-settings>=2.7,<3",
+    "PyYAML>=6.0,<7",
+]
+
+[dependency-groups]
+dev = [
+    "mypy>=1.13,<2",
+    "pip-audit>=2.8,<3",
+    "pymarkdownlnt>=0.9,<1",
+    "pytest>=9.0.3,<10",
+    "pytest-cov>=6.0,<7",
+    "ruff>=0.8,<1",
+    "types-PyYAML>=6.0.12,<7",
+]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/vietlegal"]
+
+[tool.pytest.ini_options]
+addopts = "--strict-markers --cov=vietlegal --cov-report=term-missing --cov-fail-under=90"
+testpaths = ["tests"]
+
+[tool.coverage.run]
+branch = true
+source = ["vietlegal"]
+
+[tool.coverage.report]
+show_missing = true
+skip_covered = true
+
+[tool.ruff]
+target-version = "py311"
+line-length = 100
+src = ["src", "tests"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "SIM"]
+
+[tool.mypy]
+python_version = "3.11"
+strict = true
+files = ["src", "tests"]
+warn_unreachable = true

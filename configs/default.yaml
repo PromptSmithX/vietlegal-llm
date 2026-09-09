@@ -1,0 +1,13 @@
+config_version: phase0-v1
+app_env: development
+log_level: INFO
+timezone: Asia/Ho_Chi_Minh
+corpus_version: null
+index_version: null
+generator_model: Qwen/Qwen3-4B
+generator_revision: null
+embedding_model: Qwen/Qwen3-Embedding-0.6B
+embedding_revision: null
+reranker_model: Qwen/Qwen3-Reranker-0.6B
+reranker_revision: null
+artifact_root: artifacts
