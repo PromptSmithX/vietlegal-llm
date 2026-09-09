@@ -1,176 +1,89 @@
 # Vietnamese Legal AI
 
-## Mục tiêu
+Trợ lý nghiên cứu pháp luật Việt Nam sử dụng Retrieval-Augmented Generation (RAG) để tìm căn cứ, kiểm tra hiệu lực theo thời gian và tạo câu trả lời có trích dẫn.
 
-Xây dựng một hệ thống AI hỗ trợ tra cứu và giải thích pháp luật Việt Nam có khả năng:
+> Trạng thái: **Documentation stage**. Repository hiện chứa đặc tả và kế hoạch; chưa có source code, corpus hoặc model artifact.
 
-- Hiểu câu hỏi pháp luật bằng tiếng Việt.
-- Tìm đúng văn bản, Điều, Khoản, Điểm liên quan.
-- Phân tích dựa trên căn cứ pháp luật.
-- Trích dẫn nguồn rõ ràng.
-- Hạn chế hallucination.
-- Nhận biết hiệu lực của văn bản theo thời gian.
-- Fine-tune LLM để cải thiện khả năng hiểu và suy luận pháp lý.
+## Mục tiêu MVP
+
+MVP tập trung vào Bộ luật Lao động 2019 và các văn bản trực tiếp hướng dẫn. Hệ thống phải:
+
+- hiểu câu hỏi pháp luật bằng tiếng Việt;
+- tìm đúng văn bản, Điều, Khoản, Điểm có hiệu lực tại thời điểm được hỏi;
+- chỉ kết luận từ context được truy xuất;
+- trả citation do backend ánh xạ tới nguồn chính thức;
+- từ chối kết luận khi căn cứ chưa đủ;
+- không lưu hội thoại hoặc thông tin nhận dạng người dùng.
+
+MVP là công cụ nghiên cứu/demo, không thay thế tư vấn của luật sư hoặc cơ quan có thẩm quyền.
 
 ## Nguyên tắc thiết kế
 
-> LLM không phải database pháp luật.  
-> LLM là reasoning engine.  
-> RAG là nơi cung cấp căn cứ pháp luật.
-
-Kiến thức pháp luật cập nhật nên được cung cấp bằng Retrieval-Augmented Generation (RAG), trong khi fine-tuning tập trung vào:
-
-- hiểu thuật ngữ pháp lý;
-- hiểu cấu trúc văn bản;
-- suy luận tình huống;
-- giải thích quy định;
-- phân loại;
-- viết câu trả lời theo phong cách pháp lý.
-
-## Kiến trúc tổng quát
-
 ```text
-User Question
-      ↓
-Query Analyzer
-      ↓
-BM25 + Dense Retrieval
-      ↓
-Reciprocal Rank Fusion
-      ↓
-Temporal / Metadata Filter
-      ↓
-Legal Reranker
-      ↓
-Top Contexts
-      ↓
-Fine-tuned Qwen3-4B
-      ↓
-Citation Validator
-      ↓
-Answer
+LLM = reasoning và trình bày
+RAG = kiến thức pháp luật, hiệu lực và nguồn
+Validator = ràng buộc citation và chống căn cứ bịa đặt
 ```
 
-## Tech Stack
+Fine-tuning không được dùng để ghi nhớ toàn bộ pháp luật. Corpus có version và provenance là nguồn sự thật của hệ thống.
 
-| Layer | Technology |
-|---|---|
-| Base LLM | Qwen/Qwen3-4B |
-| Fine-tuning | LoRA / QLoRA |
-| Training | Transformers + TRL + PEFT |
-| Quantization | bitsandbytes |
-| Dataset | Hugging Face Datasets |
-| Embedding | Qwen/Qwen3-Embedding-0.6B |
-| Sparse Retrieval | BM25 |
-| Prototype Vector Search | FAISS |
-| Production Vector DB | Qdrant |
-| Reranker | Qwen/Qwen3-Reranker-0.6B |
-| Backend | FastAPI |
-| MVP Frontend | Streamlit |
-| Production Frontend | Next.js / React |
-| Metadata DB | PostgreSQL |
-| LLM Serving | vLLM |
-| Experiment Tracking | W&B hoặc MLflow |
-| Deployment | Docker |
+## Thứ tự đọc tài liệu
 
-## MVP
+1. [Product requirements](docs/PRODUCT_REQUIREMENTS.md)
+2. [Architecture](ARCHITECTURE.md)
+3. [Data specification](docs/DATA_SPEC.md)
+4. [RAG specification](docs/RAG_SPEC.md)
+5. [API specification](docs/API_SPEC.md)
+6. [Evaluation](docs/EVALUATION.md)
+7. [Training](TRAINING.md)
+8. [Safety and governance](docs/SAFETY_AND_GOVERNANCE.md)
+9. [Development and operations](docs/DEVELOPMENT_AND_OPERATIONS.md)
+10. [Architecture decisions](docs/DECISIONS.md)
+11. [Implementation plan](PLAN.md)
+12. [High-level roadmap](ROADMAP.md)
 
-MVP được coi là hoàn thành khi hệ thống có thể:
-
-- nhận câu hỏi pháp luật bằng tiếng Việt;
-- tìm Điều/Khoản liên quan;
-- trả lời dựa trên context;
-- dẫn nguồn chính xác;
-- không tự tạo Điều/Khoản;
-- từ chối kết luận khi không đủ căn cứ;
-- có giao diện demo.
-
-MVP chưa cần:
-
-- Agents;
-- Multi-agent;
-- Knowledge Graph;
-- DPO;
-- GRPO;
-- Reinforcement Learning;
-- Distributed Training.
-
-## Cấu trúc repository đề xuất
+## Kiến trúc mục tiêu
 
 ```text
-vietnamese-legal-ai/
-│
-├── README.md
-├── ROADMAP.md
-├── ARCHITECTURE.md
-├── TRAINING.md
-│
-├── requirements.txt
-├── pyproject.toml
-│
-├── notebooks/
-│   ├── 01_baseline.ipynb
-│   ├── 02_data_exploration.ipynb
-│   ├── 03_embedding.ipynb
-│   ├── 04_retrieval.ipynb
-│   ├── 05_rag.ipynb
-│   ├── 06_evaluation.ipynb
-│   └── 07_finetune.ipynb
-│
-├── data/
-│   ├── raw/
-│   ├── processed/
-│   └── evaluation/
-│
-├── src/
-│   ├── ingestion/
-│   │   ├── crawler.py
-│   │   ├── parser.py
-│   │   └── chunker.py
-│   ├── retrieval/
-│   │   ├── bm25.py
-│   │   ├── dense.py
-│   │   ├── hybrid.py
-│   │   └── reranker.py
-│   ├── rag/
-│   │   ├── prompt.py
-│   │   ├── context.py
-│   │   └── pipeline.py
-│   ├── model/
-│   │   └── generator.py
-│   └── evaluation/
-│       ├── retrieval.py
-│       ├── generation.py
-│       └── citations.py
-│
-├── training/
-│   ├── prepare_sft.py
-│   ├── train_lora.py
-│   ├── evaluate.py
-│   └── config.yaml
-│
-├── api/
-│   └── main.py
-│
-├── frontend/
-├── docker/
-├── tests/
-└── scripts/
+Question
+  → Query Analyzer + reference_date
+  → BM25 Top 100 + Dense Top 100
+  → Temporal/metadata filter
+  → Reciprocal Rank Fusion Top 30
+  → Legal Reranker Top 5
+  → Context Builder
+  → Qwen3-4B
+  → Citation Validator
+  → Structured Answer
 ```
 
-## Thứ tự ưu tiên
+Chi tiết hành vi từng stage nằm trong [RAG specification](docs/RAG_SPEC.md).
 
-1. Baseline Model
-2. Legal Corpus
-3. Retrieval
-4. RAG
-5. Evaluation
-6. Fine-tuning
-7. Backend / UI
-8. Production
+## Tech stack dự kiến
 
-Chi tiết xem:
+| Layer | MVP | Production |
+|---|---|---|
+| Generator | Qwen/Qwen3-4B + Transformers | Qwen3-4B + vLLM |
+| Fine-tuning | LoRA/QLoRA, TRL, PEFT | Adapter đã qua evaluation gate |
+| Sparse retrieval | BM25 | BM25 hoặc search engine tương thích |
+| Dense retrieval | Qwen3-Embedding-0.6B + FAISS | Qdrant |
+| Reranker | Qwen3-Reranker-0.6B | Model đã benchmark tốt nhất |
+| Backend | FastAPI | FastAPI |
+| Frontend | Streamlit | Next.js/React |
+| Metadata | File artifacts có version | PostgreSQL |
+| Runtime | Local + Colab/Kaggle | Docker trên Linux GPU |
 
-- `ROADMAP.md`
-- `ARCHITECTURE.md`
-- `TRAINING.md`
+## API MVP
+
+```text
+POST /api/chat
+POST /api/search
+GET  /api/documents/{document_id}
+GET  /api/health
+```
+
+API stateless, không streaming, không authentication trong MVP. Chi tiết request, response và lỗi nằm trong [API specification](docs/API_SPEC.md).
+
+## Bắt đầu triển khai
+
+Thực hiện theo acceptance gate trong [PLAN.md](PLAN.md), bắt đầu từ Phase 0. `ROADMAP.md` chỉ mô tả lộ trình cấp cao; `PLAN.md` là checklist triển khai chính thức.
