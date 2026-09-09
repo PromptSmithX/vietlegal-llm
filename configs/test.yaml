@@ -1,0 +1,3 @@
+app_env: test
+log_level: WARNING
+artifact_root: .test-artifacts

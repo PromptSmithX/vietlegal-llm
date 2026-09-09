@@ -1,0 +1,31 @@
+# Python and tooling
+.venv/
+.uv-cache/
+.pip-audit-cache/
+__pycache__/
+*.py[cod]
+.mypy_cache/
+.pytest_cache/
+.ruff_cache/
+.coverage
+coverage.xml
+htmlcov/
+
+# Local configuration
+.env
+
+# Runtime and large artifacts
+artifacts/
+data/raw/
+data/processed/
+data/index/
+data/checkpoints/
+models/
+checkpoints/
+outputs/
+
+# OS and editor files
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/

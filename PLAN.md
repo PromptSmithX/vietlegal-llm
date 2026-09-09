@@ -8,7 +8,7 @@ Mỗi phase chỉ được chuyển sang `Done` khi toàn bộ acceptance gate �
 
 ## Phase 0 — Product và nền tảng
 
-**Status:** `In progress`
+**Status:** `Done`
 
 **Mục tiêu:** khóa yêu cầu, hợp đồng kỹ thuật và nền tảng phát triển có thể tái lập.
 
@@ -20,9 +20,9 @@ Mỗi phase chỉ được chuyển sang `Done` khi toàn bộ acceptance gate �
 
 - [x] Xác định phạm vi MVP luật lao động và các nội dung ngoài phạm vi.
 - [x] Định nghĩa data, RAG, API, evaluation, safety và operations contract.
-- [ ] Tạo cấu trúc Python package, test và config.
-- [ ] Khóa dependency và thiết lập lint, type-check, unit test trong CI.
-- [ ] Tạo `.env.example`; không commit secret.
+- [x] Tạo cấu trúc Python package, test và config.
+- [x] Khóa dependency và thiết lập lint, type-check, unit test trong CI.
+- [x] Tạo `.env.example`; không commit secret.
 
 **Đầu ra:** tài liệu đồng bộ, repository skeleton, dependency lock và CI cơ bản.
 
