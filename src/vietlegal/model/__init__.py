@@ -1,1 +1,1 @@
-"""Reserved for generator abstractions introduced after the baseline phase."""
+"""Baseline generator abstractions and future model runtime components."""

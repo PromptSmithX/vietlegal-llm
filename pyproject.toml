@@ -14,6 +14,19 @@ dependencies = [
     "PyYAML>=6.0,<7",
 ]
 
+[project.optional-dependencies]
+baseline = [
+    "accelerate>=1.6,<2",
+    "huggingface-hub>=0.30,<2",
+    "psutil>=6,<8",
+    "safetensors>=0.5,<1",
+    "torch>=2.6,<3",
+    "transformers>=4.51,<5",
+]
+
+[project.scripts]
+vietlegal-baseline = "vietlegal.model.cli:main"
+
 [dependency-groups]
 dev = [
     "mypy>=1.13,<2",
@@ -31,6 +44,7 @@ packages = ["src/vietlegal"]
 [tool.pytest.ini_options]
 addopts = "--strict-markers --cov=vietlegal --cov-report=term-missing --cov-fail-under=90"
 testpaths = ["tests"]
+markers = ["gpu: requires a CUDA-capable GPU and the baseline extra"]
 
 [tool.coverage.run]
 branch = true
@@ -39,6 +53,10 @@ source = ["vietlegal"]
 [tool.coverage.report]
 show_missing = true
 skip_covered = true
+omit = [
+  "src/vietlegal/model/cli.py",
+  "src/vietlegal/model/transformers_backend.py",
+]
 
 [tool.ruff]
 target-version = "py311"
