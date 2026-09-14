@@ -15,7 +15,6 @@ htmlcov/
 .env
 
 # Runtime and large artifacts
-artifacts/
 data/raw/
 data/processed/
 data/index/
@@ -23,6 +22,7 @@ data/checkpoints/
 models/
 checkpoints/
 outputs/
+artifacts/
 
 # OS and editor files
 .DS_Store

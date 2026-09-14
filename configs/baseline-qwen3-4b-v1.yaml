@@ -1,0 +1,12 @@
+name: baseline-qwen3-4b-v1
+model_id: Qwen/Qwen3-4B
+revision: 1cfa9a7208912126459214e8b04321603b3df60c
+license: apache-2.0
+dtype: float16
+seed: 42
+max_input_tokens: 2048
+max_new_tokens: 512
+batch_size: 1
+enable_thinking: false
+do_sample: false
+device: cuda

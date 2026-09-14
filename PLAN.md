@@ -30,7 +30,7 @@ Mỗi phase chỉ được chuyển sang `Done` khi toàn bộ acceptance gate �
 
 ## Phase 1 — Baseline LLM
 
-**Status:** `Not started`
+**Status:** `In progress`
 
 **Mục tiêu:** đo năng lực Qwen3-4B nguyên bản trước RAG và fine-tuning.
 
@@ -40,7 +40,7 @@ Mỗi phase chỉ được chuyển sang `Done` khi toàn bộ acceptance gate �
 
 **Công việc:**
 
-- [ ] Xác nhận model revision, license và chat template.
+- [x] Khóa model revision và license; chat template được hash trong manifest runtime.
 - [ ] Chạy inference smoke test trên môi trường GPU mục tiêu.
 - [ ] Tạo 100–300 câu benchmark theo taxonomy evaluation.
 - [ ] Lưu prompt, seed, config, output thô và metric baseline.
